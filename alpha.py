@@ -83,12 +83,6 @@ class Alpha():
             return True
         return False
     
-    def get_PL_set(self):
-        pass
-    
-    def get_FL_set(self):
-        pass
-    
     def get_footprint(self):
         footprint = []
         footprint.append("All transitions: {}".format(self.tl))

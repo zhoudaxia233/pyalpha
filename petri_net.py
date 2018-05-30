@@ -1,0 +1,41 @@
+class PetriNet():
+    def __init__(self):
+        self.places = []
+        self.transitions = []
+        self.input = []
+        self.output = []
+    
+    def __str__(self):
+        pn = []
+        pn.append("Places: {}".format(self.places))
+        pn.append("Transitions: {}".format(self.transitions))
+        pn.append("Input: {}".format(self.input))
+        pn.append("Output: {}".format(self.output))
+        return '\n'.join(pn)
+
+    def generate_with_alpha(self, alpha_model, dotfile='pn.dot'):
+        self.transitions = alpha_model.tl
+        self.input = alpha_model.ti
+        self.output = alpha_model.to
+        digraph = self.__pn_description(alpha_model.yl, alpha_model.ti, alpha_model.to)
+        with open(dotfile, 'w') as f:
+            f.write(digraph)
+        
+    def __pn_description(self, yl, ti, to):
+        pn = []
+        pn.append("digraph pn {")
+        pn.append("rankdir=LR;")
+        for pair in yl:
+            for i in pair[0]:
+                pn.append('"{}" -> "P({})";'.format(i, pair))
+                pn.append('"{}" [shape=box];'.format(i))
+                pn.append('"P({})" [shape=circle];'.format(pair))
+            for i in pair[1]:
+                pn.append('"P({})" -> "{}";'.format(pair, i))
+                pn.append('"{}" [shape=box];'.format(i))
+        for i in ti:
+            pn.append("In -> {}".format(i))
+        for o in to:
+            pn.append("{} -> Out".format(o))
+        pn.append("}")
+        return '\n'.join(pn)
