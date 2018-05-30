@@ -4,7 +4,24 @@ import copy
 class Alpha():
     def __init__(self, log):
         self.log = set(log)
+        self.tl = self.get_TL_set()
+        self.ds = self.direct_succession()
+        self.cs = self.causality(self.ds)
+        self.pr = self.parallel(self.ds)
+        self.ind = self.choice(self.tl, self.cs, self.pr)
+        self.ti = self.get_TI_set()
+        self.to = self.get_TO_set()
+        self.xl = self.get_XL_set(self.tl, self.ind, self.cs)
+        self.yl = self.get_YL_set(self.xl)
     
+    def __str__(self):
+        alpha_sets = []
+        alpha_sets.append("TI set: {}".format(self.ti))
+        alpha_sets.append("TO set: {}".format(self.to))
+        alpha_sets.append("XL set: {}".format(self.xl))
+        alpha_sets.append("YL set: {}".format(self.yl))
+        return '\n'.join(alpha_sets)
+
     def get_TL_set(self):
         tl = set()
         for item in self.log:
@@ -24,24 +41,22 @@ class Alpha():
             to.add(item[-1])
         return to
     
-    def get_XL_set(self, tl, choice, cs):
+    def get_XL_set(self, tl, ind, cs):
         xl = set()
         subsets = itertools.chain.from_iterable(itertools.combinations(tl, r) for r in range(1, len(tl) + 1))
-        independent_a_or_b = [a_or_b for a_or_b in subsets if self.in_choice_set(a_or_b, choice)]
+        independent_a_or_b = [a_or_b for a_or_b in subsets if self.__in_ind_set(a_or_b, ind)]
         for (a, b) in itertools.product(independent_a_or_b, independent_a_or_b):
             if (a, b) in cs:
                 xl.add((a, b))
         return xl
 
-    def in_choice_set(self, s, choice):
+    def __in_ind_set(self, s, ind):
         if len(s) == 1:
             return True
         else:
-            # 现在要判断，s这个集合的元素是否两两互斥，也就是，s的大小为2的子集们是否都在choice里面，
-            # 如果有一个不在，那就返回False
             s_all = itertools.combinations(s, 2)
             for pair in s_all:
-                if pair not in choice:
+                if pair not in ind:
                     return False
             return True
     
@@ -49,13 +64,13 @@ class Alpha():
         yl = copy.deepcopy(xl)
         s_all = itertools.combinations(yl, 2)
         for pair in s_all:
-            if self.issubset(pair[0], pair[1]):
+            if self.__issubset(pair[0], pair[1]):
                 yl.discard(pair[0])
-            elif self.issubset(pair[1], pair[0]):
+            elif self.__issubset(pair[1], pair[0]):
                 yl.discard(pair[1])
         return yl
     
-    def issubset(self, a, b):
+    def __issubset(self, a, b):
         if set(a[0]).issubset(b[0]) and set(a[1]).issubset(b[1]):
             return True
         return False
@@ -67,7 +82,13 @@ class Alpha():
         pass
     
     def get_footprint(self):
-        pass
+        footprint = []
+        footprint.append("All transitions: {}".format(self.tl))
+        footprint.append("Direct succession: {}".format(self.ds))
+        footprint.append("Causality: {}".format(self.cs))
+        footprint.append("Parallel: {}".format(self.pr))
+        footprint.append("Choice: {}".format(self.ind))
+        return '\n'.join(footprint)
     
     def direct_succession(self):
         # x > y
@@ -94,11 +115,11 @@ class Alpha():
                 pr.add(pair)
         return pr
     
-    def choice(self, tl, cs):
+    def choice(self, tl, cs, pr):
         # (x # y) & (y # x)
-        choice = set()
+        ind = set()
         all_permutations = itertools.permutations(tl, 2)
         for pair in all_permutations:
-            if pair not in cs and pair[::-1] not in cs:
-                choice.add(pair)
-        return choice
+            if pair not in cs and pair[::-1] not in cs and pair not in pr:
+                ind.add(pair)
+        return ind
