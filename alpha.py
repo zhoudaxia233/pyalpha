@@ -44,13 +44,13 @@ class Alpha():
     def get_XL_set(self, tl, ind, cs):
         xl = set()
         subsets = itertools.chain.from_iterable(itertools.combinations(tl, r) for r in range(1, len(tl) + 1))
-        independent_a_or_b = [a_or_b for a_or_b in subsets if self.__in_ind_set(a_or_b, ind)]
-        for (a, b) in itertools.product(independent_a_or_b, independent_a_or_b):
-            if (a, b) in cs:
+        independent_a_or_b = [a_or_b for a_or_b in subsets if self.__is_ind_set(a_or_b, ind)]
+        for a, b in itertools.product(independent_a_or_b, independent_a_or_b):
+            if self.__is_cs_set((a, b), cs):
                 xl.add((a, b))
         return xl
 
-    def __in_ind_set(self, s, ind):
+    def __is_ind_set(self, s, ind):
         if len(s) == 1:
             return True
         else:
@@ -59,6 +59,14 @@ class Alpha():
                 if pair not in ind:
                     return False
             return True
+    
+    def __is_cs_set(self, s, cs):
+        set_a, set_b = s[0], s[1]
+        s_all = itertools.product(set_a, set_b)
+        for pair in s_all:
+            if pair not in cs:
+                return False
+        return True
     
     def get_YL_set(self, xl):
         yl = copy.deepcopy(xl)
