@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+# coding: utf-8
 '''
 For reading the txt file of event logs
 '''

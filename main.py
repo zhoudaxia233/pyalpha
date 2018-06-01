@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+# coding: utf-8
 from reader import read
 from alpha import Alpha
 from petri_net import PetriNet
