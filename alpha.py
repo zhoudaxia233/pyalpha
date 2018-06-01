@@ -94,6 +94,10 @@ class Alpha():
         footprint.append("Choice: {}".format(self.ind))
         return '\n'.join(footprint)
     
+    def generate_footprint(self, txtfile='footprint.txt'):
+        with open(txtfile, 'w') as f:
+            f.write(self.get_footprint())
+    
     def direct_succession(self):
         # x > y
         ds = set()
