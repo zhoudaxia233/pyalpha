@@ -27,7 +27,8 @@ class TestAlpha(unittest.TestCase):
             val = getattr(model, set_name)
             val_new = []
             any(val_new.append((set(i[0]), set(i[1]))) for i in val)
-            def eq(a, b):
+            def eq(p, q):
+                a, b = p[:], q[:]
                 if len(a) != len(b):
                     return False
                 while a:
