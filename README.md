@@ -5,7 +5,8 @@ It generates a Petri net using the [Alpha Algorithm](https://en.wikipedia.org/wi
 
 ---
 ## Requirements
-`Python3` only, you don't need ANY third-party libraries.
+1. `Python3`
+2. `graphviz-2.38` (Only this version has been tested, other versions may also work), you need to add **graphviz** to your SYSTEM PATH. Just add the **/bin/** folder is enough.
 
 ---
 
@@ -13,5 +14,4 @@ It generates a Petri net using the [Alpha Algorithm](https://en.wikipedia.org/wi
 ```
 ./main.py test/test0.txt
 ```
-After running the command, it automatically generates a dot file, then you can copy the content inside and paste it [here](http://www.webgraphviz.com/) to get the Petri Net image.
->Update: Now it also generates a footprint.txt file.
+After running the command, it automatically generates a dot file, a png file shows the Petri Net and a txt file describing the footprint.

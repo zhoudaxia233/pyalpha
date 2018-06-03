@@ -3,6 +3,7 @@
 from reader import read
 from alpha import Alpha
 from petri_net import PetriNet
+from subprocess import check_call
 import sys
 import os
 
@@ -13,7 +14,7 @@ def main(argv):
     alpha_model.generate_footprint(txtfile="{}_footprint.txt".format(filename))
     pn = PetriNet()
     pn.generate_with_alpha(alpha_model, dotfile="{}.dot".format(filename))
-
+    check_call(["dot", "-Tpng", "{}.dot".format(filename),"-o", "{}.png".format(filename)])
 
 if __name__ == '__main__':
     main(sys.argv)
