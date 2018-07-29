@@ -19,14 +19,17 @@ class PetriNet():
         self.transitions = alpha_model.tl
         self.input = alpha_model.ti
         self.output = alpha_model.to
-        digraph = self.__pn_description(alpha_model.yl, alpha_model.ti, alpha_model.to)
+        iso = self.__isolated_transitions(alpha_model)
+        digraph = self.__pn_description(alpha_model.yl, alpha_model.ti, alpha_model.to, iso)
         with open(dotfile, 'w') as f:
             f.write(digraph)
         
-    def __pn_description(self, yl, ti, to):
+    def __pn_description(self, yl, ti, to, iso):
         pn = []
         pn.append("digraph pn {")
         pn.append("rankdir=LR;")
+        for c in iso:
+            pn.append('"{}" [shape=box];'.format(c))
         for pair in yl:
             for i in pair[0]:
                 pn.append('"{}" -> "P({})";'.format(i, pair))
@@ -41,3 +44,19 @@ class PetriNet():
             pn.append("{} -> Out".format(o))
         pn.append("}")
         return '\n'.join(pn)
+    
+    def __isolated_transitions(self, alpha_model):
+        tl = alpha_model.tl
+        yl = alpha_model.yl
+        ti = alpha_model.ti
+        to = alpha_model.to
+
+        yl_transitions = set()
+        for pair in yl:
+            # yl is like: {(('a',), ('b',)), (('b',), ('d',))}
+            for p in pair:
+                yl_transitions.add(p[0])
+
+        appeared = ti | to | yl_transitions  # "|" for set union
+        iso = tl - appeared
+        return iso
