@@ -14,7 +14,7 @@ class Alpha():
         self.ti = self.get_TI_set()
         self.to = self.get_TO_set()
         self.xl = self.get_XL_set(self.tl, self.ind, self.cs)
-        self.yl = self.get_YL_set(self.xl)
+        self.yl = self.get_YL_set(self.xl, self.pr)
     
     def __str__(self):
         alpha_sets = []
@@ -70,7 +70,7 @@ class Alpha():
                 return False
         return True
     
-    def get_YL_set(self, xl):
+    def get_YL_set(self, xl, pr):
         yl = copy.deepcopy(xl)
         s_all = itertools.combinations(yl, 2)
         for pair in s_all:
@@ -78,12 +78,32 @@ class Alpha():
                 yl.discard(pair[0])
             elif self.__issubset(pair[1], pair[0]):
                 yl.discard(pair[1])
+    
+        # remove self-loops
+        # e.g. if (a,b),(b,c) in YL, and (b,b) in Parallel, then we need to remove (a,b),(b,c)
+        # (a,b) is equal to (a,bb), also b||b, thus a and bb cannot make a pair, only "#" relations can.
+        self_loop = set()
+        for pair in pr:
+            if pair == pair[::-1]:  # if we found pairs like (b,b), add b into self-loop sets
+                self_loop.add(pair[0])
+
+        to_be_deleted = set()
+        for pair in yl:
+            if self.__contains(pair, self_loop):
+                to_be_deleted.add(pair)
+        for pair in to_be_deleted:
+            yl.discard(pair)
         return yl
     
     def __issubset(self, a, b):
         if set(a[0]).issubset(b[0]) and set(a[1]).issubset(b[1]):
             return True
         return False
+    
+    def __contains(self, a, b):
+        # return True if nested tuple "a" contains any letter in set "b"
+        # e.g. __contains((('a',), ('b',)), ('b', 'c')) -> True
+        return any(j == i[0] for i in a for j in b)
     
     def get_footprint(self):
         footprint = []
@@ -125,7 +145,7 @@ class Alpha():
     
     def choice(self, tl, cs, pr):
         # (x # y) & (y # x)
-        ind = set()
+        ind = set()  # ind is the abbreviation of independent
         all_permutations = itertools.permutations(tl, 2)
         for pair in all_permutations:
             if pair not in cs and pair[::-1] not in cs and pair not in pr:
