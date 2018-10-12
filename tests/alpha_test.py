@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 # coding: utf-8
 import unittest
-from alpha import Alpha
-from reader import read
+from pyalpha.alpha import Alpha
+from pyalpha.reader import read
 import os
 
 class TestAlpha(unittest.TestCase):
