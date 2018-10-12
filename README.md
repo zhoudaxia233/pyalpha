@@ -27,3 +27,6 @@ e.g. If you want to run unit tests of `alpha_test.py`, just type the command bel
 ```
 python -m unittest tests.alpha_test
 ```
+
+### How can I use my custom event logs?  
+Please take a look at `.txt` files in folder `tests/`. Just follow the same style.
