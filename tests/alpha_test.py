@@ -7,9 +7,9 @@ import os
 
 class TestAlpha(unittest.TestCase):
 
-    model0 = Alpha(read(os.path.join("test", "test0.txt")))
-    model1 = Alpha(read(os.path.join("test", "test1.txt")))
-    model2 = Alpha(read(os.path.join("test", "test2.txt")))
+    model0 = Alpha(read(os.path.join("tests", "test0.txt")))
+    model1 = Alpha(read(os.path.join("tests", "test1.txt")))
+    model2 = Alpha(read(os.path.join("tests", "test2.txt")))
 
     def __equality_check(self, s0, s1, s2, set_name):
         temp = [[TestAlpha.model0, s0], [TestAlpha.model1, s1], [TestAlpha.model2, s2]]
@@ -75,7 +75,7 @@ class TestAlpha(unittest.TestCase):
         s0 = {(('a',), ('e',)), (('a', 'd'), ('b',)), (('b',), ('f', 'c')), (('c',), ('d',)), (('e',), ('f',))}
         s1 = {(('a',), ('b', 'e')), (('a',), ('c', 'e')), (('c', 'f', 'g', 'h'), ('d',)), (('e',), ('f', 'g', 'h')), 
               (('f', 'b', 'g', 'h'), ('d',))}
-        s2 = {(('a',), ('b',)), (('a',), ('c',)), (('a',), ('e',)), (('b',), ('e',)), (('c',), ('e',)), (('c',), ('f',)), 
+        s2 = {(('a',), ('c',)), (('a',), ('e',)), (('c',), ('e',)), (('c',), ('f',)), 
               (('d',), ('a',)), (('d',), ('e',)), (('e',), ('f',))}
         self.__order_independent_equality_check(s0, s1, s2, 'yl')
     
