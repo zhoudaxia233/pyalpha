@@ -15,6 +15,16 @@ On Windows, you may need this link [Graphviz 2.38 Stable Release](https://graphv
 
 ---
 
+## Installation
+
+Install `pyalpha`:
+
+```bash
+sudo pip3 install pyalpha
+```
+
+---
+
 ## Developing
 
 Install `pyalpha` for development:
@@ -26,16 +36,16 @@ python3 setup.py develop
 ---
 
 ## Usage
-### Run the script
+### How to use pyalpha?
 ```bash
 pyalpha name-of-your-file-which-contains-event-logs.txt  # e.g. tests/test0.txt
 ```
 By default, it generates a dot file, a png file shows the Petri Net and a txt file describing the footprint.
 
-### Run unit tests
+### How to run unit tests?
 e.g. If you want to run unit tests of `alpha_test.py`, just type the command below:  
 ```bash
-python -m unittest tests.alpha_test
+python3 -m unittest tests.alpha_test
 ```
 
 ### How can I use my custom event logs?  

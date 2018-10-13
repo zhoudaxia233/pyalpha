@@ -3,3 +3,4 @@ __pycache__
 *.dot
 *.png
 *.egg-info/
+dist/
